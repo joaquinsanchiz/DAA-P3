@@ -31,10 +31,10 @@ public class PlatosReader {
 	       // Lectura del fichero
            String linea;
            br.readLine();
-           conjuntoPlatos.setPunctuation_(Short.parseShort(br.readLine()));
+           conjuntoPlatos.setPunctuation_(Integer.parseInt(br.readLine()));
 	       while((linea=br.readLine())!=null){
-	    	   String [] token = linea.split("\\s");
-	    	   Plato temp = new Plato(token[0], Short.parseShort(token[1]), Short.parseShort(token[2]));
+	    	   String [] token = linea.split("\\s+");
+	    	   Plato temp = new Plato(token[0], Integer.parseInt(token[1]), Integer.parseInt(token[2]));
 	    	   conjuntoPlatos.setPlatos_(temp);
 	       }
 	           

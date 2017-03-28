@@ -8,8 +8,8 @@ package menuSaludable;
 public class Plato {
 	
 	private String name_;
-	private short punctuation_;
-	private short nutritionalValue_;
+	private int punctuation_;
+	private int nutritionalValue_;
 	
 	public String getName_() {
 		return name_;
@@ -19,23 +19,23 @@ public class Plato {
 		this.name_ = name_;
 	}
 	
-	public short getPunctuation_() {
+	public int getPunctuation_() {
 		return punctuation_;
 	}
 	
-	public void setPunctuation_(short punctuation_) {
+	public void setPunctuation_(int punctuation_) {
 		this.punctuation_ = punctuation_;
 	}
 	
-	public void setNutritionalValue_(short nutritionalValue){
+	public void setNutritionalValue_(int nutritionalValue){
 		this.nutritionalValue_ = nutritionalValue;
 	}
 	
-	public short getNutritionalValue(){
+	public int getNutritionalValue(){
 		return this.nutritionalValue_;
 	}
 	
-	Plato(String name, short nutritionalValue, short punctuation){
+	Plato(String name, int nutritionalValue, int punctuation){
 		this.setName_(name);
 		this.setNutritionalValue_(nutritionalValue);
 		this.setPunctuation_(punctuation);

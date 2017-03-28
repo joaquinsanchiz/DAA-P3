@@ -25,11 +25,11 @@ public class ProgramacionDinamica {
 	 * Funcion recursiva para la resolucion del problema
 	 * @param conjunto Conjunto de platos
 	 * @param wi Parametro de puntuacion
-	 * @param W Umbral maximo
+	 * @param vPuntuaciones Umbral maximo
 	 * @param n Numero de platos
 	 * @return Valor del sub-problema
 	 */
-	public int recursiva(Menu conjunto, int wi, int W, int n){
+	public int recursiva(int[] v, int[] w, int n, int W){
 		
 		if (n == 0 && W >= 0){
 			return 0;
@@ -38,8 +38,8 @@ public class ProgramacionDinamica {
 			return Integer.MIN_VALUE;
 		}
 		
-		int maxA = recursiva(conjunto, conjunto.getPlato(n).getPunctuation_(), W, n - 1);
-		int maxB = recursiva(conjunto, conjunto.getPlato(n).getPunctuation_(), W - conjunto.getPlato(n).getPunctuation_(), n - 1) + conjunto.getPlato(n).getNutritionalValue();
+		int maxA = recursiva(v, w, n - 1, W);
+		int maxB = recursiva(v, w, n - 1, W - w[n-1]) + v[n-1];
 
 		return Integer.max(maxA, maxB);
 		
@@ -80,9 +80,9 @@ public class ProgramacionDinamica {
 				else V.get(i).set(w, V.get(i-1).get(w)); //V[i, j] = V[i - 1, j];
 			}
 		}
-		for(int i = 0; i < V.size(); i++){
+		/*for(int i = 0; i < V.size(); i++){
 			System.out.println(V.get(i));
-		}
+		}*/
 		System.out.println("Solucion BottomUp: " + V.get(n).get(W));
 		/*int j = W;
 		for (int i = n-1; i >0; i--){
@@ -101,55 +101,50 @@ public class ProgramacionDinamica {
 	 * @param numero_platos
 	 * @param umbral
 	 */
-	public void algoritmo_bottomup(int [][] matriz, int [] vValores, int []vPuntuaciones, int numero_platos, int umbral){ 
-		System.out.println(numero_platos + ", " + umbral);
-		for (int j = 0; j < umbral; j++){
-			matriz[0][j] = 0;
+	public void algoritmo_bottomup(int [][] V, int [] v, int []w, int n, int W){ 
+		System.out.println(n + ", " + W);
+		for (int j = 0; j < W; j++){
+			V[0][j] = 0;
 		}
-		for(int i = 1; i <= numero_platos; i++){
-			for(int j = 0; j < umbral; j++){
-				if(vPuntuaciones[i-1] <= j){
-					matriz[i][j] = Integer.max(matriz[i-1][j], matriz[i-1][j - vPuntuaciones[i-1]] + vValores[i-1]);
+		for(int i = 1; i <= n; i++){
+			for(int j = 0; j < W; j++){
+				if(w[i-1] <= j){
+					V[i][j] = Integer.max(V[i-1][j], V[i-1][j+1 - w[i-1]] + v[i-1]);
 				}
 				else{
-					matriz[i][j] = matriz[i-1][j];
+					V[i][j] = V[i-1][j];
 				}
 			}
 		}
-		for(int i = 0; i < matriz.length; i++){
-			for(int j = 0; j < matriz[i].length; j++){
-				System.out.print(matriz[i][j] + " ");
+		/*for(int i = 0; i < V.length; i++){
+			for(int j = 0; j < V[i].length; j++){
+				System.out.print(V[i][j] + " ");
 			}
 			System.out.println("");
-		}
-		int j = umbral-1;
-		for (int i = matriz.length-2; i > 1; i--){
-			if(vPuntuaciones[i] <= j && matriz[i-1][j-vPuntuaciones[i]] + vValores[i] == matriz[i][j]) {
-				System.out.println("El objeto" + i + " esta en la mochila");
-				j = j - vPuntuaciones[i];
+		}*/
+		System.out.println("Solucion: " + V[n-1][W-1]);
+		int j = W-1;
+		for (int i = n; i > 1; i--){
+			if(w[i-1] <= j && V[i-1][j-w[i-1]] + v[i-1] == V[i][j]) {
+				System.out.println("El objeto " + (i) + " esta en la mochila");
+				j = j - w[i-1];
 			}
-		}
-		
+		}	
 	}
-	public static void main (String args[]){
-		ProgramacionDinamica p1 = new ProgramacionDinamica();
-		Menu conjuntoPlatos = PlatosReader.readPlatosFromFile(args[0]); //Conjunto total de platos, siendo W la punctuation del menú.
-		//int solucion = p1.recursiva(conjuntoPlatos, 0, conjuntoPlatos.getPunctuation_(), conjuntoPlatos.getPlatos_().size()-1);
-		int [][] matriz = new int[conjuntoPlatos.getPlatos_().size()+1][conjuntoPlatos.getPunctuation_()];
-		int [] vValores = new int[conjuntoPlatos.getPlatos_().size()];
-		int [] vPuntuaciones = new int[conjuntoPlatos.getPlatos_().size()];
-		for (int i = 0; i < vValores.length; i++){
-			vValores[i] = conjuntoPlatos.getPlato(i).getNutritionalValue();
-		}
-		for(int i = 0; i < vPuntuaciones.length; i++){
-			vPuntuaciones[i] = conjuntoPlatos.getPlato(i).getPunctuation_();
-		}
-		p1.algoritmo_bottomup(matriz, vValores, vPuntuaciones, vValores.length, conjuntoPlatos.getPunctuation_());
-		
-		
-		
-		//System.out.println("Solucion Recursivo: " + solucion);
-		//p1.BottomUp(conjuntoPlatos, 0, conjuntoPlatos.getPlatos_().size(), conjuntoPlatos.getPunctuation_());
-		
+	int algoritmo_topdown(int [][] V, int [] v, int [] w, int n, int W){ 
+	    if (n == 0 && W >= 0)
+	        return 0;
+	    
+	    if(W < 0)
+	        return Integer.MIN_VALUE;
+	    
+	    if( V[n][W-1] != -1)
+	        return V[n][W-1];
+
+
+	    int v1 = algoritmo_topdown(V, v, w, n -1, W);
+	    int v2 = algoritmo_topdown(V, v, w, n -1, W - w[n]) + v[n];
+	    V[n][W] = Integer.max(v1, v2);
+	    return V[n][W];
 	}
 }

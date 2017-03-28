@@ -11,7 +11,7 @@ public class Menu {
 	
 	private ArrayList<Plato> platos_ = new ArrayList<Plato>();
 	private short nutritionalValue_;
-	private short punctuation_;
+	private int punctuation_;
 	
 	public ArrayList<Plato> getPlatos_() {
 		return platos_;
@@ -30,10 +30,10 @@ public class Menu {
 	public void setNutritionalValue_(short nutritionalValue_) {
 		this.nutritionalValue_ = nutritionalValue_;
 	}
-	public short getPunctuation_() {
+	public int getPunctuation_() {
 		return punctuation_;
 	}
-	public void setPunctuation_(short punctuation_) {
+	public void setPunctuation_(int punctuation_) {
 		this.punctuation_ = punctuation_;
 	}
 	/**
